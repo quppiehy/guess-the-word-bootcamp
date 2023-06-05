@@ -2,6 +2,7 @@
   "name": "guess-the-word-bootcamp",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://quppiehy.github.io/guess-the-word-bootcamp",
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
@@ -17,6 +18,8 @@
     "sass": "^1.62.1"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
