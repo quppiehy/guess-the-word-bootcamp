@@ -1,4 +1,5 @@
-import React from "react";
+//import React from "react";
+import * as React from "react";
 import { getRandomWord } from "./utils.js";
 import "./App.css";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -23,7 +24,7 @@ class App extends React.Component {
       // Insert form input state here
       input: "",
       correctWord: false,
-      guessedWord: "",
+      guessedLetter: "",
       remainGuessValue: 100,
     };
   }
@@ -63,40 +64,61 @@ class App extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     let letters = [...this.state.guessedLetters];
-    letters.push(e.target.value);
-    this.setState(
-      {
-        guessedLetters: letters,
+    let currLetter = e.target.value;
+    let setLetters = new Set(letters);
+    if (setLetters.has(currLetter)) {
+      alert(`You have already keyed in ${currLetter} before.`);
+      this.setState({
         input: "",
-        remainGuess: this.state.remainGuess - 1,
-        remainGuessValue: this.state.remainGuessValue - 10,
-      },
-      () => {
-        let word = this.generateWordDisplay();
-        let noComma = word.split(",");
-        let currLetter = letters[letters.length - 1];
-        noComma = new Set(noComma);
-        if (noComma.has(currLetter)) {
-          alert(`You keyed in the correct letter ${currLetter}`);
-        }
-        noComma = [...noComma].join("");
-        console.log(currLetter);
+      });
+      return;
+    } else if (!/^[a-z]+$/i.test(currLetter)) {
+      alert(
+        `You keyed in ${currLetter} which is a number. Please key in a letter.`
+      );
+      this.setState({
+        input: "",
+      });
+    } else {
+      letters.push(currLetter);
+      this.setState(
+        {
+          guessedLetters: letters,
+          input: "",
+          remainGuess: this.state.remainGuess - 1,
+          remainGuessValue: this.state.remainGuessValue - 10,
+        },
+        () => {
+          let word = this.generateWordDisplay();
+          let noComma = word.split(",");
+          let currLetter = letters[letters.length - 1];
+          noComma = new Set(noComma);
+          if (noComma.has(currLetter)) {
+            alert(`You keyed in the correct letter ${currLetter}!`);
+          }
+          noComma = [...noComma].join("");
+          console.log(currLetter);
 
-        if (letters.length >= noComma.length) {
-          this.checkWord();
+          if (letters.length >= noComma.length) {
+            this.checkWord();
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   handleReset = (e) => {
     e.preventDefault();
     this.setState({
       currWord: getRandomWord(),
+      // guessedLetters stores all letters a user has guessed so far
       guessedLetters: [],
-      input: "",
+      // Insert num guesses left state here
       remainGuess: 10,
+      // Insert form input state here
+      input: "",
       correctWord: false,
+      guessedLetter: "",
       remainGuessValue: 100,
     });
   };
