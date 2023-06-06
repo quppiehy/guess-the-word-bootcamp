@@ -5,6 +5,9 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 class App extends React.Component {
   constructor(props) {
@@ -71,8 +74,14 @@ class App extends React.Component {
       () => {
         let word = this.generateWordDisplay();
         let noComma = word.split(",");
+        let currLetter = letters[letters.length - 1];
         noComma = new Set(noComma);
+        if (noComma.has(currLetter)) {
+          alert(`You keyed in the correct letter ${currLetter}`);
+        }
         noComma = [...noComma].join("");
+        console.log(currLetter);
+
         if (letters.length >= noComma.length) {
           this.checkWord();
         }
@@ -121,7 +130,7 @@ class App extends React.Component {
         {/* Insert form element here */}
         <input
           type="text"
-          maxlength="1"
+          maxLength="1"
           placeholder="Pls key in an alphabet"
           value={this.state.input}
           onChange={(e) => this.handleChange(e)}
@@ -144,25 +153,31 @@ class App extends React.Component {
       return (
         <div className="App">
           <header className="App-header">
-            <h1>Guess The Word 🚀</h1>
-            <br />
-            <br />
+            <Container fluid>
+              <Row className="justify-content-md-center">
+                <Col>
+                  <h1>Guess The Word 🚀</h1>
+                  <br />
+                </Col>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col xs={4}>
+                  <h3>Word Display</h3>
+                  {displayGuess}
+                </Col>
+                <Col xs={3}>
+                  <br />
 
-            <div className="d-flex flex-row mb-2">
-              <div className="p-2">
-                <h3>Word Display</h3>
-                {displayGuess}
-              </div>
-              <div className="p-2 w-300">
-                <div style={{ width: 300, height: 300, padding: 20 }}>
-                  <CircularProgressbar
-                    variant="determinate"
-                    value={this.state.remainGuessValue}
-                    text={`${this.state.remainGuess} left`}
-                  />
-                </div>
-              </div>
-            </div>
+                  <div style={{ width: 250, height: 250 }}>
+                    <CircularProgressbar
+                      variant="determinate"
+                      value={this.state.remainGuessValue}
+                      text={`${this.state.remainGuess} tries`}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
           </header>
         </div>
       );
